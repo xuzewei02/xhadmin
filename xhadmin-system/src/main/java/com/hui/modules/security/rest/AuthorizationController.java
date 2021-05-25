@@ -135,6 +135,7 @@ public class AuthorizationController {
             put("img", captcha.toBase64());
             put("uuid", uuid);
         }};
+        log.info("getCode,code:{},uuid:{}",captchaValue,uuid);
         return ResponseEntity.ok(imgResult);
     }
 
