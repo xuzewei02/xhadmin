@@ -52,6 +52,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -127,6 +129,13 @@ public class AuthorizationController {
         String captchaValue = captcha.text();
         if (captcha.getCharType() - 1 == LoginCodeEnum.arithmetic.ordinal() && captchaValue.contains(".")) {
             captchaValue = captchaValue.split("\\.")[0];
+        }
+
+        try {
+            InetAddress ip = InetAddress.getLocalHost();
+            System.out.println("ip=" + ip);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
         // 保存
         redisUtils.set(uuid, captchaValue, loginProperties.getLoginCode().getExpiration(), TimeUnit.MINUTES);
