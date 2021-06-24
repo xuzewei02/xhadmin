@@ -43,7 +43,13 @@ spring:
         wall:
           config:
             multi-statement-allow: true
-
+  redis:
+    #数据库索引
+    host: r-uf6704f54e6a8c14pd.redis.rds.aliyuncs.com
+    port: 6379
+    password: redis:Huanghui@xzw2013
+    #连接超时时间
+    timeout: 5000
 # 登录相关配置
 login:
   # 登录缓存
