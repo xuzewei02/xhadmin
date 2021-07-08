@@ -1,6 +1,7 @@
 # xhadmin
 个人分享搭建项目
 目前项目架构为：
+Springboot + JPA + Security + Mybatis（后续接入）+JWT + redis + MySQL
 
 xhadmin
     --xhadmin-common:公共组件模块
