@@ -16,6 +16,7 @@
 package com.hui.modules.security.rest;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.hui.annotation.Log;
 import com.hui.exception.BadRequestException;
 import com.hui.modules.system.domain.Dept;
 import com.hui.modules.system.service.DeptService;
@@ -75,7 +76,7 @@ public class DeptController {
         return new ResponseEntity<>(deptService.buildTree(new ArrayList<>(deptDtos)),HttpStatus.OK);
     }
 
-    //@Log("新增部门")
+    @Log("新增部门")
     @ApiOperation("新增部门")
     @PostMapping
     @PreAuthorize("@el.check('dept:add')")
@@ -87,7 +88,7 @@ public class DeptController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //@Log("修改部门")
+    @Log("修改部门")
     @ApiOperation("修改部门")
     @PutMapping
     @PreAuthorize("@el.check('dept:edit')")
@@ -96,7 +97,7 @@ public class DeptController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //@Log("删除部门")
+    @Log("删除部门")
     @ApiOperation("删除部门")
     @DeleteMapping
     @PreAuthorize("@el.check('dept:del')")

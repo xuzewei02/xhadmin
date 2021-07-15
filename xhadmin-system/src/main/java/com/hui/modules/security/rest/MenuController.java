@@ -16,6 +16,7 @@
 package com.hui.modules.security.rest;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.hui.annotation.Log;
 import com.hui.exception.BadRequestException;
 import com.hui.modules.system.domain.Menu;
 import com.hui.modules.system.service.MenuService;
@@ -109,7 +110,7 @@ public class MenuController {
         return new ResponseEntity<>(menuService.getMenus(null),HttpStatus.OK);
     }
 
-    //@Log("新增菜单") 日志项目
+    @Log("新增菜单")
     @ApiOperation("新增菜单")
     @PostMapping
     @PreAuthorize("@el.check('menu:add')")
@@ -121,7 +122,7 @@ public class MenuController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //@Log("修改菜单")
+    @Log("修改菜单")
     @ApiOperation("修改菜单")
     @PutMapping
     @PreAuthorize("@el.check('menu:edit')")
@@ -130,7 +131,7 @@ public class MenuController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //@Log("删除菜单")
+    @Log("删除菜单")
     @ApiOperation("删除菜单")
     @DeleteMapping
     @PreAuthorize("@el.check('menu:del')")
