@@ -1,4 +1,4 @@
-package com.hui.modules.security.config;
+package com.hui.modules.config;
 
 import com.hui.annotation.AnonymousAccess;
 import com.hui.modules.security.config.bean.SecurityProperties;
