@@ -28,6 +28,12 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
 
+    /**
+     * 会员信息 --分页
+     * @param member 条件
+     * @param pageable 分页参数
+     * @return
+     */
     @Override
     public Map<String, Object> queryAll(MemberQueryCriteria member, Pageable pageable){
         Page<Member> page = memberRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, member, cb), pageable);
@@ -35,7 +41,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
-     * 回去会员信息 --分页
+     * 会员信息 --全部
      *
      * @param member
      * @return

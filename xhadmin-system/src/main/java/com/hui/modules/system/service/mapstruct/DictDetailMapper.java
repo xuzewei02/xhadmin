@@ -22,8 +22,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 /**
-* @author Zheng Jie
-* @date 2019-04-10
+* @author xu.ze.wei
+* @date 2021-04-10
 */
 @Mapper(componentModel = "spring", uses = {DictSmallMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface DictDetailMapper extends BaseMapper<DictDetailDto, DictDetail> {

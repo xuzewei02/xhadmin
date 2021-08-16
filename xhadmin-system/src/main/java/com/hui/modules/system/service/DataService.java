@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * 数据权限服务类
- * @author Zheng Jie
+ * @author xu.ze.wei
  * @date 2020-05-07
  */
 public interface DataService {

@@ -50,6 +50,9 @@ spring:
     #password: root:root
     #连接超时时间
     timeout: 5000
+mybatis:
+  type-aliases-package: com.hui.modules.member.domain
+  mapper-locations: classpath:mapper/*.xml
 # 登录相关配置
 login:
   # 登录缓存
@@ -119,3 +122,4 @@ file:
   avatarMaxSize: 5
 server:
   port: 8001
+

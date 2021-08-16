@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
-* @author Zheng Jie
-* @date 2019-04-10
+* @author xu.ze.wei
+* @date 2021-04-10
 */
 public interface DictDetailService {
 

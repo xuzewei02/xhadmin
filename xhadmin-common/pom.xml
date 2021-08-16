@@ -28,6 +28,11 @@
             <artifactId>hibernate-validator</artifactId>
             <version>6.0.13.Final</version>
         </dependency>
+        <dependency>
+            <groupId>com.jfinal</groupId>
+            <artifactId>enjoy</artifactId>
+            <version>4.8</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -20,7 +20,6 @@ import com.hui.utils.SpringContextHolder;
 import io.swagger.annotations.Api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
@@ -30,10 +29,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 开启审计功能 -> @EnableJpaAuditing
+ * 开启JPA 审计功能 -> @EnableJpaAuditing
  *
  * @author xu.ze.wei
- * @date 2021/5/22 2:20:19
+ * @date 2020/7/22 2:20:19
  */
 @EnableAsync
 @RestController

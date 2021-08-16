@@ -23,8 +23,8 @@ import java.util.Optional;
 
 /**
  * @description  : 设置审计
- * @author  : Dong ZhaoYang
- * @date : 2019/10/28
+ * @author  : Admin
+ * @date : 2020/10/28
  */
 @Component("auditorAware")
 public class AuditorConfig implements AuditorAware<String> {

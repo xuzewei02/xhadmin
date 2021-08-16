@@ -28,8 +28,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
-* @author Zheng Jie
-* @date 2019-04-10
+* @author xu.ze.wei
+* @date 2020-04-10
 */
 @Entity
 @Getter

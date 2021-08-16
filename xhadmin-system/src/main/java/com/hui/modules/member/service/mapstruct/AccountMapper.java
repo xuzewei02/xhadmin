@@ -19,12 +19,6 @@ package com.hui.modules.member.service.mapstruct;
 import com.hui.base.BaseMapper;
 import com.hui.modules.member.domain.Account;
 import com.hui.modules.member.dto.AccountDto;
-import com.hui.modules.system.domain.User;
-import com.hui.modules.system.service.dto.UserDto;
-import com.hui.modules.system.service.mapstruct.DeptMapper;
-import com.hui.modules.system.service.mapstruct.DictSmallMapper;
-import com.hui.modules.system.service.mapstruct.JobMapper;
-import com.hui.modules.system.service.mapstruct.RoleMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

@@ -18,8 +18,8 @@ package com.hui.base;
 import java.util.List;
 
 /**
- * @author Zheng Jie
- * @date 2018-11-23
+ * @author xuz.ze.wei
+ * @date 2020-11-23
  */
 public interface BaseMapper<D, E> {
 

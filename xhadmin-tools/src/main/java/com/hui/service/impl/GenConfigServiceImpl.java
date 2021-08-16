@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.hui.rest;
+package com.hui.service.impl;
 
 import com.hui.domain.GenConfig;
 import com.hui.repository.GenConfigRepository;

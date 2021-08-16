@@ -74,7 +74,7 @@ public class RedisConfig extends CachingConfigurerSupport {
 
     @SuppressWarnings("all")
     @Bean(name = "redisTemplate")
-    @ConditionalOnMissingBean(name = "redisTemplate")
+    @ConditionalOnMissingBean(name = "redisTemplate")//redis本项目就一个注册Bean，此注解保证只有1个，如果不想复杂，可用普通注册bean
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         //序列化
@@ -84,8 +84,8 @@ public class RedisConfig extends CachingConfigurerSupport {
         template.setHashValueSerializer(fastJsonRedisSerializer);
         // 全局开启AutoType，这里方便开发，使用全局的方式
         ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
-        // 建议使用这种方式，小范围指定白名单
-        // ParserConfig.getGlobalInstance().addAccept("me.zhengjie.domain");
+        // 建议使用这种方式，小范围指定白名单 后面再扩展
+        // ParserConfig.getGlobalInstance().addAccept("com.hui.domain");
         // key的序列化采用StringRedisSerializer
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
