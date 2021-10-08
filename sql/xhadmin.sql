@@ -883,3 +883,892 @@ CREATE TABLE `ts_account`
   AUTO_INCREMENT = 6
   DEFAULT CHARSET = utf8
   ROW_FORMAT = COMPACT COMMENT ='账户';
+
+
+
+
+
+-- ----------------------------
+-- 业务表开始 包括t_member,t_account
+-- ----------------------------
+
+
+
+-- ----------------------------
+-- customer of system 流水(充值，积分增加等等)
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_transaction_record`;
+CREATE TABLE `ts_transaction_record`
+(
+    `transaction_record_id`   bigint(20)               NOT NULL AUTO_INCREMENT,
+    `transaction_customer_id` varchar(32)              NOT NULL comment '流水记录id',
+    `member_id`               bigint(20)               NOT NULL comment '会员id',
+    `member_name`             varchar(200)             NOT NULL comment '会员姓名',
+    `transaction_type`        varchar(20)              NOT NULL comment '流水类型',
+    `fund_type`               varchar(20)    default 1 NOT NULL comment '流水明细类型(细化类型)',
+    `direction_type`          varchar(20)    default 1 NOT NULL comment '流水方向',
+    `level_desc`              varchar(200) comment '会员等级描述',
+    `transaction_value`       decimal(20, 2) default 0.00 comment '变化值',
+    `account_value`           decimal(20, 2) default 0.00 comment '变化后值',
+    `remark`                  varchar(200)   default 1 NOT NULL comment '备注',
+    `operator_id`             bigint(20)               NOT NULL comment '操作人id',
+    `operator_name`           varchar(200)             NOT NULL comment '操作人姓名',
+    `create_time`             datetime                 NOT NULL COMMENT '创建时间',
+    `create_by`               varchar(100)             NOT NULL COMMENT '创建人',
+    `update_time`             datetime                 NOT NULL COMMENT '修改时间',
+    `update_by`               varchar(100)             NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`transaction_record_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='流水(充值，积分增加等等)';
+
+
+
+-- ----------------------------
+-- customer of system 会员等级
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_member_level`;
+CREATE TABLE `ts_member_level`
+(
+    `level_id`          bigint(20)               NOT NULL AUTO_INCREMENT,
+    `level_customer_id` varchar(32)              NOT NULL comment '会员等级业务Id',
+    `member_id`         bigint(20)               NOT NULL comment '会员id',
+    `level_config_id`   bigint(20)               NOT NULL comment '会员等级配置Id',
+    `level`             bigint(20)     default 1 NOT NULL comment '会员等级',
+    `discount_rate`     decimal(19, 6)           NOT NULL comment '会员折扣',
+    `level_desc`        varchar(200) comment '会员等级描述',
+    `integral`          decimal(20, 2) default 0.00 comment '积分值',
+    `create_time`       datetime                 NOT NULL COMMENT '创建时间',
+    `create_by`         varchar(100)             NOT NULL COMMENT '创建人',
+    `update_time`       datetime                 NOT NULL COMMENT '修改时间',
+    `update_by`         varchar(100)             NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`level_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='会员等级';
+
+
+-- ----------------------------
+-- customer of system 会员等级配置
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_member_level_config`;
+CREATE TABLE `ts_member_level_config`
+(
+    `level_config_id`    bigint(20)           NOT NULL AUTO_INCREMENT,
+    `config_customer_id` varchar(32)          NOT NULL comment '会员等级配置业务Id',
+    `level`              bigint(20)           NOT NULL comment '会员等级',
+    `level_desc`         bigint(20) default 1 NOT NULL comment '会员等级描述',
+    `integral_min_value` decimal(20, 2) comment '等级最小区间值',
+    `integral_max_value` decimal(20, 2) comment '等级最大区间值',
+    `discount_rate`      decimal(20, 6) comment '会员等级对应折扣',
+    `status`             varchar(20) comment '状态 OPEN:开启;CLOSED:关闭',
+    `create_time`        datetime             NOT NULL COMMENT '创建时间',
+    `create_by`          varchar(100)         NOT NULL COMMENT '创建人',
+    `update_time`        datetime             NOT NULL COMMENT '修改时间',
+    `update_by`          varchar(100)         NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`level_config_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='会员等级配置';
+
+
+-- ----------------------------
+-- customer of system 会员标签
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_member_tag`;
+CREATE TABLE `ts_member_tag`
+(
+    `member_tag_id`          bigint(20)           NOT NULL AUTO_INCREMENT,
+    `member_tag_customer_id` varchar(32)          NOT NULL comment '会员等级配置业务Id',
+    `member_id`              bigint(20)           NOT NULL comment '会员id',
+    `tag_code`               bigint(20)           NOT NULL comment 'tag_code',
+    `tag_value`              bigint(20) default 1 NOT NULL comment 'tag描述',
+    `create_time`            datetime             NOT NULL COMMENT '创建时间',
+    `create_by`              varchar(100)         NOT NULL COMMENT '创建人',
+    `update_time`            datetime             NOT NULL COMMENT '修改时间',
+    `update_by`              varchar(100)         NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`member_tag_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='会员标签';
+
+
+-- ----------------------------
+-- customer of system 系统消息
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_system_message`;
+CREATE TABLE `ts_system_message`
+(
+    `system_message_id`    bigint(20)   NOT NULL AUTO_INCREMENT,
+    `message_customer_id` varchar(32)  NOT NULL comment '系统消息业务Id',
+    `message_type`         varchar(20)  NOT NULL comment '消息类型',
+    `message_content`      blob         NOT NULL comment '消息内容',
+    `target_user_type`     varchar(20)  NOT NULL comment '目标用户类型',
+    `target_member_id`     varchar(32) COMMENT '目标用户Id',
+    `create_time`          datetime     NOT NULL COMMENT '创建时间',
+    `create_by`            varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`          datetime     NOT NULL COMMENT '修改时间',
+    `update_by`            varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`system_message_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='系统消息';
+
+
+
+-- ----------------------------
+-- customer of system 订单表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_customer_order`;
+CREATE TABLE `ts_customer_order`
+(
+    `order_id`            bigint(20)               NOT NULL AUTO_INCREMENT,
+    `customer_order_id`   varchar(32)              NOT NULL comment '订单业务Id',
+    `member_id`           bigint(20)               NOT NULL comment '客户id',
+    `member_name`         varchar(200) comment '客户名字',
+    `member_nick_name`    varchar(200) comment '客户昵称',
+    `member_mobile`       varchar(20) comment '客户手机号',
+    `discount_voucher_id` bigint(20) comment '抵扣券id',
+    `discount_amount`     decimal(20, 2) default 0 comment '抵扣金额',
+    `red_package_id`      bigint(20) comment '红包id',
+    `red_amount`          decimal(20, 2) default 0 comment '红包金额',
+    `ext_discount_amount` decimal(20, 2) default 0 comment '其他抵扣金额',
+    `order_amount`        decimal(20, 2) default 0 NOT NULL comment '订单金额(下单金额(实际价格+红包金额+抵扣券金额))',
+    `order_actual_amount` decimal(20, 2) default 0 NOT NULL comment '实际金额',
+    `pay_type`            varchar(20) COMMENT '支付方式(BALANCE:余额支付...)',
+    `target_member_id`    varchar(32)              NOT NULL COMMENT '目标用户Id',
+    `server_member_id`    bigint(20) COMMENT '客服id',
+    `server_member_name`  varchar(32) COMMENT '客服姓名',
+    `order_no`            varchar(200) COMMENT '订单编号',
+    `delivery_no`         varchar(200) COMMENT '快递单号',
+    `delivery_count`      integer        default 1 COMMENT '包裹件数',
+    `delivery_type`       varchar(20) COMMENT '快递类型(INNER_COUNTRY:国内;OUTER_COUNTRY:国外)',
+    `image_url`           varchar(200) COMMENT '发货图',
+    `protection_status`   varchar(200) COMMENT '维权状态:INIT:初始化;PROTECTING:维权中;PROTECTION_REFUSED:已拒绝;COMPLETE:维权成功，退款完成',
+    `status`              varchar(20) COMMENT 'INIT:初始化;WAITING_ORDER:待下单;ORDERING:下单中;WAITING_PAY:待付款;PAYING:付款中;PAYED:已付款;TRANSFERRING:运输中;APPLYED:已签收;REFUSED:拒收',
+    `order_time`          datetime COMMENT '下单时间',
+    `pay_time`            datetime COMMENT '付款时间',
+    `send_time`           datetime COMMENT '发货时间',
+    `complete_time`       datetime COMMENT '订单完成时间',
+    `pack_time`           datetime COMMENT '申请打包时间',
+    `remark`              varchar(400) COMMENT '备注',
+    `create_time`         datetime                 NOT NULL COMMENT '创建时间',
+    `create_by`           varchar(100)             NOT NULL COMMENT '创建人',
+    `update_time`         datetime                 NOT NULL COMMENT '修改时间',
+    `update_by`           varchar(100)             NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`order_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='订单表';
+
+
+-- ----------------------------
+-- customer of system 订单评论表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_order_comment`;
+CREATE TABLE `ts_order_comment`
+(
+    `order_comment_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `order_comment_customer_id` varchar(32)  NOT NULL comment '物流业务id',
+    `order_id`                  bigint(20) comment '订单id',
+    `router_id`                 bigint(20) comment '专线id',
+    `comment_member_id`         bigint(20) comment '评论用户id',
+    `comment_member_name`       varchar(100) comment '评论用户姓名',
+    `audit_status`              varchar(20) comment '审核状态: WAITING_AUDIT:待审核;AUDITED:已审核;REFUSED:审核拒绝:',
+    `approve_num`               bigint(20) comment '评论点赞数量',
+    `server_evaluate`           varchar(45) comment '客服评价',
+    `logistics_evaluate`        varchar(45) comment '物流评价',
+    `integrated_evaluate`       varchar(45) comment '包括完整度评价',
+    `content`                   bigint(20) comment '评论内容',
+    `remark`                    varchar(400) comment '备注',
+    `status`                    varchar(20) comment '状态:ENABLE:启用;DISABLE:删除',
+    `create_time`               datetime     NOT NULL COMMENT '创建时间',
+    `create_by`                 varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`               datetime     NOT NULL COMMENT '修改时间',
+    `update_by`                 varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`order_comment_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='订单评论表';
+
+
+-- ----------------------------
+-- customer of system 订单收货表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_receipt`;
+CREATE TABLE `ts_receipt`
+(
+    `receipt_id`            bigint(20)   NOT NULL AUTO_INCREMENT,
+    `receipt_customer_id`   varchar(32)  NOT NULL comment '收货业务Id',
+    `order_id`              bigint(20)   NOT NULL comment '订单id',
+    `receipt_member_name`   varchar(200) comment '收货人名字',
+    `receipt_member_mobile` varchar(200) comment '收货人手机号',
+    `area`                  varchar(100) comment '区域',
+    `post`                  varchar(20) comment '邮编',
+    `province`              varchar(200) comment '省/州',
+    `city`                  varchar(20) comment '城市',
+    `detail_address`        varchar(400) comment '详细地址',
+    `remark`                varchar(400) NOT NULL COMMENT '备注',
+    `create_time`           datetime     NOT NULL COMMENT '创建时间',
+    `create_by`             varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`           datetime     NOT NULL COMMENT '修改时间',
+    `update_by`             varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`receipt_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='订单收货表';
+
+
+-- ----------------------------
+-- customer of system 订单包裹表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_package`;
+CREATE TABLE `ts_package`
+(
+    `package_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `package_customer_id` varchar(32)  NOT NULL comment '收货业务Id',
+    `member_id`           bigint(20) comment '报备人id',
+    `member_name`         varchar(200) comment '报备人名字',
+    `member_mobile`       varchar(200) comment '报备人手机',
+
+    `store_id`            bigint(20) comment '仓库id',
+    `store_name`          varchar(200) comment '仓库名字',
+    `shelf_id`            bigint(20) comment '货架id',
+    `shelf_name`          varchar(200) comment '货架名字',
+    `floor_id`            bigint(20) comment '层数id',
+    `floor_name`          varchar(200) comment '层数名字',
+
+    `weight`              decimal(20, 6) comment '重量(单位kg)',
+
+    `delivery_no`         varchar(100) comment '快递单号',
+    `delivery_id`         bigint(20) comment '快递商id',
+    `delivery_name`       varchar(200) comment '快递商',
+
+    `merchant_type_id`    bigint(200) comment '品类id(商品还是物品todo 待定)',
+    `merchant_type_name`  varchar(200) comment '品类名字',
+
+    `length`              decimal(20, 6) comment '货物长(单位cm)',
+    `width`               decimal(20, 6) comment '货物宽(单位cm)',
+    `height`              decimal(20, 6) comment '货物高(单位cm)',
+    `goods_price`         decimal(20, 2) comment '货值(单位:元)',
+
+    `order_id`            bigint(20) comment '订单id',
+    `package_no`          varchar(200) comment '包裹单号',
+
+    `type`                varchar(20) comment '类型 NORMAL:普货;SENSITIVE:敏货',
+    `sign_flag`           varchar(20) comment 'SIGNED:已签收;UN_SIGNED:未签收',
+    `status`              varchar(20) default 'WAITING_STORE' comment '状态 WAITING_STORE:待入库;STORED:已入库;CANCELLED:已取消',
+
+    `report_record_id`    bigint(20) comment '报备id',
+    `report_record_time`  datetime comment '报备时间',
+    `store_time`          datetime comment '入库时间',
+    `order`               bigint(20) comment '排序序号',
+    `create_time`         datetime     NOT NULL COMMENT '创建时间',
+    `create_by`           varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`         datetime     NOT NULL COMMENT '修改时间',
+    `update_by`           varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`package_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='订单包裹表';
+
+
+-- ----------------------------
+-- customer of system 报备记录表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_report_record`;
+CREATE TABLE `ts_report_record`
+(
+    `report_record_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `report_record_customer_id` varchar(32)  NOT NULL comment '报备记录业务id',
+    `member_id`                 bigint(20) comment '报备人id',
+    `member_name`               varchar(200) comment '报备人名字',
+    `member_mobile`             varchar(200) comment '报备人手机',
+    `package_id`                bigint(20) comment '包裹id',
+    `server_id`                 bigint(20) comment '客服id',
+    `server_name`               varchar(200) comment '客服名字',
+    `store_id`                  bigint(20) comment '仓库id',
+    `store_name`                varchar(200) comment '仓库名字',
+    `shelf_id`                  bigint(20) comment '货架id',
+    `shelf_name`                varchar(200) comment '货架名字',
+    `floor_id`                  bigint(20) comment '层数id',
+    `floor_name`                varchar(200) comment '层数名字',
+    `weight`                    decimal(20, 6) comment '重量(单位kg)',
+    `order_id`                  bigint(20) comment '订单id',
+    `delivery_no`               varchar(100) comment '快递单号',
+    `delivery_id`               bigint(20) comment '快递商id',
+    `delivery_name`             varchar(200) comment '快递商',
+    `merchant_id`               bigint(20) comment '品类id',
+    `merchant_name`             varchar(200) comment '品类名',
+    `goods_price`               decimal(20, 4) comment '货值(单位:元)',
+    `length`                    decimal(20, 6) comment '货物长(单位cm)',
+    `width`                     decimal(20, 6) comment '货物宽(单位cm)',
+    `height`                    decimal(20, 6) comment '货物高(单位cm)',
+    `type`                      varchar(20) comment '类型 NORMAL:普货;SENSITIVE:敏货',
+    `sign_flag`                 varchar(20) comment 'SIGNED:已签收;UN_SIGNED:未签收',
+    `remark`                    varchar(400) comment '备注',
+    `payer_remark`              varchar(400) comment '买家备注',
+    `image_url`                 varchar(400) comment '货物图片',
+    `report_status`             varchar(20) comment '报备状态 WAITING_REPORT:待报价;REPORTED:(报价之后)已报价;WAITING_SENDING:(支付状态已支付之后)待发货;WAITING_RECEIVE:(发货之后变为)待收货;COMPLETE:(用户收货之后变为)已完成',
+    `pay_status`                varchar(20) comment '支付状态 WAITING_PAY:待支付;PAYED:已支付',
+    `sign_status`               varchar(20) comment '签收状态 UN_SIGN:未签收;SIGNED:已签收',
+    `status`                    varchar(20) default 'WAITING_STORE' comment '状态 WAITING_STORE:待入库;STORED:已入库;CANCELLED:已取消',
+    `report_time`               datetime COMMENT '报备时间',
+    `store_time`                datetime COMMENT '入库时间',
+    `apply_package_time`        datetime COMMENT '申请打包时间',
+    `send_time`                 datetime COMMENT '发货时间',
+    `create_time`               datetime     NOT NULL COMMENT '创建时间',
+    `create_by`                 varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`               datetime     NOT NULL COMMENT '修改时间',
+    `update_by`                 varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`report_record_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='报备记录表';
+
+
+-- ----------------------------
+-- customer of system 订单商品表(有可能一个订单对应多个商品，这里算商品打包一起)
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_tracking_goods`;
+CREATE TABLE `ts_tracking_goods`
+(
+    `goods_id`           bigint(20)   NOT NULL AUTO_INCREMENT,
+    `googds_customer_id` varchar(32)  NOT NULL comment '订单商品表业务id',
+    `order_id`           bigint(20)   NOT NULL comment '订单Id',
+    `weight`             decimal(20, 2) comment '重量（kg）',
+    `volume`             varchar(200)   default 0 comment '体积（长*宽*高cm）',
+    `volume_weight`      decimal(20, 2) default 0 comment '体积重(长*宽*高cm/6000 单位:kg 四舍五入)',
+    `iamge_url`          varchar(400) comment '商品图片链接',
+    `create_time`        datetime     NOT NULL COMMENT '创建时间',
+    `create_by`          varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`        datetime     NOT NULL COMMENT '修改时间',
+    `update_by`          varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`goods_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='订单商品表';
+
+
+-- ----------------------------
+-- customer of system 地区管理表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_area`;
+CREATE TABLE `ts_area`
+(
+    `area_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `area_customer_id` varchar(32)  NOT NULL comment '地区业务id',
+    `area_code`        varchar(45)   NOT NULL comment '地区code',
+    `area_desc`        varchar(400) comment '地区描述',
+    `area_remark`      varchar(1000) comment '地区备注',
+    `route`            varchar(200) comment '支持线路',
+    `status`           varchar(20) default 'DISABLE' comment '状态 ENABLE:启用;DISABLE:禁用',
+    `recommend_flag`   varchar(20) default 'UN_RECOMMEND' comment '是否推荐(RECOMMEND:推荐;UN_RECOMMEND:不推荐)',
+    `order`            bigint(20) comment '排序序号',
+    `create_time`      datetime     NOT NULL COMMENT '创建时间',
+    `create_by`        varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`      datetime     NOT NULL COMMENT '修改时间',
+    `update_by`        varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`area_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='地区管理';
+
+
+-- ----------------------------
+-- customer of system 城市表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_city`;
+CREATE TABLE `ts_city`
+(
+    `city_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `city_customer_id` varchar(32)  NOT NULL comment '城市业务id',
+    `city_code`        varchar(45)  NOT NULL comment '城市code',
+    `city_desc`        varchar(1000) comment '城市描述',
+    `area_id`          bigint(20)   NOT NULL comment '地区id',
+    `city_remark`      varchar(400) comment '城市备注',
+    `order`            bigint(20) comment '排序',
+    `status`           varchar(20) default 'DISABLE' comment '状态 ENABLE:启用;DISABLE:禁用',
+    `create_time`      datetime     NOT NULL COMMENT '创建时间',
+    `create_by`        varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`      datetime     NOT NULL COMMENT '修改时间',
+    `update_by`        varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`city_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='城市表';
+
+
+-- ----------------------------
+-- customer of system 快递商表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_delivery`;
+CREATE TABLE `ts_delivery`
+(
+    `delivery_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `delivery_customer_id` varchar(32)  NOT NULL comment '快递商业务id',
+    `logo`                 varchar(200) comment '快递logo',
+    `name`                 varchar(200) comment '快递名称',
+    `business_code`        varchar(45)  NOT NULL comment '物流商简码',
+    `type`                 varchar(20) comment '类型 NORMAL:普货;SENSITIVE:敏货',
+    `limit_weight`         decimal(20, 6) comment '限重(单位kg)',
+    `support_type_id`      bigint(20) comment '支持类别id',
+    `support_type`         varchar(20) comment '支持类别',
+    `feature`              varchar(200) comment '特点',
+    `limit_goods`          varchar(450) comment '物品限制',
+    `length_goods`         varchar(450) comment '长度限制',
+    `order`                bigint(20) comment '排序',
+    `status`               varchar(20) default 'DISABLE' comment '状态 ENABLE:启用;DISABLE:禁用',
+    `create_time`          datetime     NOT NULL COMMENT '创建时间',
+    `create_by`            varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`          datetime     NOT NULL COMMENT '修改时间',
+    `update_by`            varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`delivery_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='快递商表';
+
+
+-- ----------------------------
+-- customer of system 路线表  todo edit
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_route`;
+CREATE TABLE `ts_route`
+(
+    `route_id`                  bigint(20)   NOT NULL AUTO_INCREMENT,
+    `route_customer_id`         varchar(32)  NOT NULL comment '路线业务id',
+    `area_id`                   bigint(20)   NOT NULL comment '地区id',
+    `area_code`                 varchar(20) comment '城市code',
+    `area_desc`                 varchar(400) comment '城市描述',
+    `delivery_id`               bigint(20) comment '快递商id',
+    `delivery_name`             varchar(200) comment '快递商名称',
+    `billing_type`              varchar(40) comment '计费方式 100g:100克;500g:500克;1000g:1000克',
+    `first_weight_cost`         decimal(20, 4) comment '首重价(单位:元)',
+    `first_weight_cost_contain` decimal(20, 6) comment '首重额外包含重量(单位g)',
+    `standard_add_weight`       decimal(20, 6) comment '每超出重量(单位g)',
+    `standard_add_cost`         decimal(20, 6) comment '每超出重量增加费用(单位元)',
+    `evaluate_day`              decimal(20, 2) comment '评估时间(实际为评估天数)',
+    `limit_weight`              decimal(20, 6) comment '限重(单位kg)',
+    `operate_fee`               decimal(20, 6) comment ' 操作费用(单位元)',
+    `support_unpack_flag`       varchar(40) comment '支持拆包标记 Y:支持;N:不支持',
+    `unpack_fee`                decimal(20, 6) comment ' 拆包费用(单位元)',
+    `status`                    varchar(20) default 'DISABLE' comment '状态 ENABLE:启用;DISABLE:禁用',
+    `create_time`               datetime     NOT NULL COMMENT '创建时间',
+    `create_by`                 varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`               datetime     NOT NULL COMMENT '修改时间',
+    `update_by`                 varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`route_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='路线表';
+
+
+-- ----------------------------
+-- customer of system 国际快递商表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_internal_delivery`;
+CREATE TABLE `ts_internal_delivery`
+(
+    `internal_delivery_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `internal_delivery_customer_id` varchar(32)  NOT NULL comment '国际快递商业务id',
+    `logo`                 varchar(200) comment '快递logo',
+    `name`                 varchar(200) comment '快递名称',
+    `business_code`        varchar(45)  NOT NULL comment '物流商简码',
+    `mobile`               varchar(20)  NOT NULL comment '物流商电话',
+    `type`                 varchar(20) comment '类型 NORMAL:普货;SENSITIVE:敏货',
+    `limit_weight`         decimal(20, 6) comment '限重(单位kg)',
+    `support_type_id`      bigint(20) comment '支持类别id',
+    `support_type`         varchar(20) comment '支持类别',
+    `order`                bigint(20) comment '排序',
+    `status`               varchar(20) default 'DISABLE' comment '状态 ENABLE:启用;DISABLE:禁用',
+    `create_time`          datetime     NOT NULL COMMENT '创建时间',
+    `create_by`            varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`          datetime     NOT NULL COMMENT '修改时间',
+    `update_by`            varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`internal_delivery_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='国际快递商表';
+
+
+-- ----------------------------
+-- customer of system 商品品类
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_merchant_type`;
+CREATE TABLE `ts_merchant_type`
+(
+    `merchant_type_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `merchant_type_customer_id` varchar(32)  NOT NULL comment '商品品类业务id',
+    `type_name`                 varchar(200) comment '类别名称',
+    `goods_remark`              varchar(400) NOT NULL comment '物品说明',
+    `common_product_name`       varchar(400) NOT NULL comment '常见品名',
+    `order`                     bigint(20) comment '排序',
+    `status`                    varchar(20) default 'DISABLE' comment '状态 ENABLE:启用;DISABLE:禁用',
+    `create_time`               datetime     NOT NULL COMMENT '创建时间',
+    `create_by`                 varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`               datetime     NOT NULL COMMENT '修改时间',
+    `update_by`                 varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`merchant_type_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='商品品类';
+
+
+-- ----------------------------
+-- customer of system 货物品类
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_goods_type`;
+CREATE TABLE `ts_goods_type`
+(
+    `goods_type_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `goods_type_customer_id` varchar(32)  NOT NULL comment '货物品类业务id',
+    `goods_name`             varchar(200) comment '货物品名',
+    `goods_remark`           varchar(400) comment '物品说明',
+    `merchant_id`            bigint(20)   NOT NULL comment '商品品类id',
+    `merchant_remark`        varchar(400) NOT NULL comment '品类说明(常见品名)',
+    `order`                  bigint(20) comment '排序',
+    `status`                 varchar(20) default 'DISABLE' comment '状态 ENABLE:启用;DISABLE:禁用',
+    `create_time`            datetime     NOT NULL COMMENT '创建时间',
+    `create_by`              varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`            datetime     NOT NULL COMMENT '修改时间',
+    `update_by`              varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`goods_type_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='货物品类';
+
+
+
+-- ----------------------------
+-- customer of system 货架表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_goods_shelf`;
+CREATE TABLE `ts_goods_shelf`
+(
+    `goods_shelf_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `goods_shelf_customer_id` varchar(32)  NOT NULL comment '货物品类业务id',
+    `self_name`               varchar(200) comment '名字',
+    `area`                    varchar(200) comment '区域',
+    `floor`                   bigint(20) comment '层数',
+    `package_num`             bigint(20)  default 0 comment '包裹数',
+    `store_id`                bigint(20) comment '仓库id',
+    `store_house`             varchar(200) comment '所属仓库',
+    `self_remark`             varchar(400) comment '货架说明',
+    `order`                   bigint(20) comment '排序',
+    `status`                  varchar(20) default 'DISABLE' comment '状态 ENABLE:启用;DISABLE:禁用',
+    `create_time`             datetime     NOT NULL COMMENT '创建时间',
+    `create_by`               varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`             datetime     NOT NULL COMMENT '修改时间',
+    `update_by`               varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`goods_shelf_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='货架表';
+
+
+-- ----------------------------
+-- customer of system 基础设置 结算，体现等等 可以设置在 sys_dict 字典表 todo 后面再看
+-- ----------------------------
+
+
+-- ----------------------------
+-- customer of system 支持银行表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_bank`;
+CREATE TABLE `ts_bank`
+(
+    `bank_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `bank_customer_id` varchar(32)  NOT NULL comment '银行业务id',
+    `bank_code`        varchar(45) comment '银行code',
+    `bank_name`        varchar(200) comment '银行名称',
+    `branch_bank_code` varchar(45) comment '支行code',
+    `branch_bank_name` varchar(200) default 0 comment '支行名称',
+    `bank_remark`      varchar(400) comment '银行备注',
+    `order`            bigint(20) comment '排序',
+    `status`           varchar(20)  default 'DISABLE' comment '状态 ENABLE:启用;DISABLE:禁用',
+    `create_time`      datetime     NOT NULL COMMENT '创建时间',
+    `create_by`        varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`      datetime     NOT NULL COMMENT '修改时间',
+    `update_by`        varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`bank_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='支持银行表';
+
+
+-- ----------------------------
+-- customer of system 提现申请表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_withdraw_apply`;
+CREATE TABLE `ts_withdraw_apply`
+(
+    `withdraw_apply_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `withdraw_apply_customer_id` varchar(32)  NOT NULL comment '提现业务id',
+    `withdraw_no`                varchar(100) comment '提现单号',
+    `withdraw_third_no`          varchar(100) comment '三方提现单号',
+    `member_id`                  bigint(20) comment '会员id',
+    `member_name`                varchar(200) comment '会员名字',
+    `withdraw_type`              varchar(200) comment '提现方式',
+    `withdraw_apply_amount`      decimal(20, 4) comment '提现金额',
+    `actual_amount`              decimal(20, 4) default 0 comment '实际到账金额(包括红包)',
+    `fee`                        decimal(20, 4) comment '提现手续费',
+    `pay_time`                   datetime comment '支付时间',
+    `pay_actual_time`            datetime comment '实际支付时间',
+    `status`                     varchar(20)    default 'WAITING_AUDIT' comment '状态 WAITING_AUDIT:待审核;AUDITED:已审核;WAITING_PAY:待支付;PAYED:已支付;AUDIT_REFUSED:审批已拒绝;PAY_REFUSED:支付已拒绝;PAY_FAILED:支付失败;',
+    `create_time`                datetime     NOT NULL COMMENT '创建时间',
+    `create_by`                  varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`                datetime     NOT NULL COMMENT '修改时间',
+    `update_by`                  varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`withdraw_apply_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='提现申请表';
+
+-- ----------------------------
+-- customer of system 充值记录表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_recharge_record`;
+CREATE TABLE `ts_recharge_record`
+(
+    `recharge_record_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `recharge_record_customer_id` varchar(32)  NOT NULL comment '充值业务id',
+    `recharge_no`                 varchar(100) comment '充值单号',
+    `recharge_third_no`           varchar(100) comment '三方充值单号',
+    `member_id`                   bigint(20) comment '会员(粉丝)id',
+    `member_name`                 varchar(200) comment '会员(粉丝)名字',
+    `recharge_type`               varchar(20) comment '充值方式(ZFB:支付宝;WX:微信)',
+    `recharge_amount`             decimal(20, 4) comment '充值金额',
+    `actual_amount`               decimal(20, 4) default 0 comment '实际到账金额(包括红包)',
+    `recharge_time`               datetime comment '充值时间',
+    `pay_actual_time`             datetime comment '实际到账时间',
+    `status`                      varchar(20)    default 'INIT' comment '状态 INIT:申请充值;SUCCESS:充值成功;RECHARGING:充值中;CANCELLED:已取消;',
+    `create_time`                 datetime     NOT NULL COMMENT '创建时间',
+    `create_by`                   varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`                 datetime     NOT NULL COMMENT '修改时间',
+    `update_by`                   varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`recharge_record_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='充值记录表';
+
+
+-- ----------------------------
+-- customer of system 活动表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_activity`;
+CREATE TABLE `ts_activity`
+(
+    `activity_id`             bigint(20)   NOT NULL AUTO_INCREMENT,
+    `activity_customer_id`    varchar(32)  NOT NULL comment '活动业务id',
+    `activity_type`           varchar(45) comment '活动类型 [RED_PACKAGE,COUPON:红包,FULL_REBATE_COUPON:满返券,MANAGEMENT_FUND:投资券,FULL_DEDUCTION_COUPON:满抵券]',
+    `activity_user_type`      varchar(45) comment '获取福利时用户类型 [REGISTERED_BUT_UN_USE注册未使用用户，USED:已使用用户] ',
+    `event`                   varchar(45) comment '活动事件(REGISTER:注册奖励;RECHARGE_WELFARE:充值奖励 等等)',
+    `activity_amount`         decimal(20, 4) comment '活动福利金额',
+    `activity_num`            bigint(20) comment '福利数量',
+    `validate_period`         bigint(20) comment '活动有效天数',
+    `start_time`              datetime COMMENT '活动开始时间',
+    `end_time`                datetime COMMENT '活动结束时间',
+    `status`                  varchar(20) default 'DISABLE' comment '状态 DISABLE:禁用;ENABLE:启用',
+    `prize_background_url`    varchar(450) comment '活动奖品背景URL',
+    `activity_background_url` varchar(450) comment '活动品背景URL',
+    `share_title`             varchar(450) comment '分享标题(todo不懂干嘛)',
+    `create_time`             datetime     NOT NULL COMMENT '创建时间',
+    `create_by`               varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`             datetime     NOT NULL COMMENT '修改时间',
+    `update_by`               varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`activity_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='活动表';
+
+-- ----------------------------
+-- customer of system 福利奖励类型表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_category`;
+CREATE TABLE `ts_category`
+(
+    `category_id`           bigint(20)   NOT NULL AUTO_INCREMENT,
+    `category_customer_id`  varchar(32)  NOT NULL comment '活动业务id',
+    `category_type`         varchar(45) comment '奖励类型 [RED_PACKAGE,COUPON:红包,FULL_REBATE_COUPON:满返券,MANAGEMENT_FUND:投资券,FULL_DEDUCTION_COUPON:满抵券]',
+    `category_name`         varchar(45) comment '奖励类型名称(可参照奖励类型名称)',
+    `category_title`        varchar(45) comment '奖励类型标题(用于列表显示或头信息展示)',
+    `event`                 varchar(45) comment '活动事件(REGISTER:注册奖励;RECHARGE_WELFARE:充值奖励 等等)',
+    `send_type`             varchar(45) comment '发送类型 [TARGET_USER:指定用户发放，USER_LEVEL:用户分组等级发送,ALL:全员发送] ',
+    `min_invest_amount`     decimal(20, 4) comment '最小达到发放金额',
+    `amount`                decimal(20, 4) comment '活动福利金额',
+    `category_num`          bigint(20) comment '发放份数，-1即无限制',
+    `category_everyone_num` bigint(20) comment '每人发放张数',
+    `receive_start_time`    datetime COMMENT '可领取开始时间',
+    `receive_end_time`      datetime COMMENT '可领取结束时间',
+    `validate_period`       bigint(20) comment '福利有效天数',
+    `start_time`            datetime COMMENT '福利开始时间',
+    `end_time`              datetime COMMENT '福利结束时间',
+    `order`                 bigint(20) comment '排序',
+    `status`                varchar(20) default 'DISABLE' comment '状态 DISABLE:禁用;ENABLE:启用',
+    `create_time`           datetime     NOT NULL COMMENT '创建时间',
+    `create_by`             varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`           datetime     NOT NULL COMMENT '修改时间',
+    `update_by`             varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`category_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='福利奖励类型表';
+
+
+-- ----------------------------
+-- customer of system 票券表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_coupon`;
+CREATE TABLE `ts_coupon`
+(
+    `coupon_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `coupon_customer_id` varchar(32)  NOT NULL comment '活动业务id',
+    `category_id`        bigint(20) comment '奖励类型id',
+    `category_type`      varchar(20) comment '奖励类型 [RED_PACKAGE,COUPON:红包,FULL_REBATE_COUPON:满返券,MANAGEMENT_FUND:投资券,FULL_DEDUCTION_COUPON:满抵券]',
+    `category_name`      varchar(100) comment '奖励类型名称(可参照奖励类型名称)',
+    `category_title`     varchar(200) comment '奖励类型标题(用于列表显示或头信息展示)',
+    `event`              varchar(45) comment '活动事件(REGISTER:注册奖励;RECHARGE_WELFARE:充值奖励 等等)',
+    `member_id`          bigint(20) comment '会员id',
+    `member_name`        varchar(100) comment '会员名',
+    `validate_period`    bigint(20) comment '福利有效天数',
+    `start_time`         datetime COMMENT '票券有效期开始时间',
+    `end_time`           datetime COMMENT '票券有效期结束时间',
+    `order_id`           bigint(20) comment '使用单号(订单号)',
+    `status`             varchar(20) default 'UN_USE' comment '状态 UN_USE:未使用;USED:已使用;INVALID:已失效',
+    `create_time`        datetime     NOT NULL COMMENT '创建时间',
+    `create_by`          varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`        datetime     NOT NULL COMMENT '修改时间',
+    `update_by`          varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`coupon_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='票券表';
+
+
+
+-- ----------------------------
+-- customer of system 客服表 放在后台管理用户 TODO 需要修改后台管理用户表
+-- ----------------------------
+
+
+-- ----------------------------
+-- customer of system 仓库表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_store`;
+CREATE TABLE `ts_store`
+(
+    `store_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `store_customer_id` varchar(32)  NOT NULL comment '仓库业务id',
+    `store_name`        varchar(200) comment '仓库名字',
+    `receiver`          varchar(45) comment '收件人',
+    `mobile`            varchar(20) comment '联系电话',
+    `address`           varchar(200) comment '详细收货地址',
+    `province_code`     varchar(45) comment '省份code',
+    `province_name`     varchar(100) comment '省份名称',
+    `city_code`         varchar(45) comment '城市code',
+    `city_name`         varchar(100) comment '城市名称',
+    `area_code`         varchar(45) comment '地区code',
+    `area_name`         varchar(100) comment '地区name',
+    `longitude`         varchar(100) comment '经度',
+    `latitude`          varchar(100) comment '纬度',
+    `post`              bigint(20) comment '邮编',
+    `order`             bigint(20) comment '排序',
+    `status`            varchar(20) default 'DISABLE' comment '状态 ENABLE:启用;DISABLE:禁用',
+    `create_time`       datetime     NOT NULL COMMENT '创建时间',
+    `create_by`         varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`       datetime     NOT NULL COMMENT '修改时间',
+    `update_by`         varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`store_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='仓库表';
+
+
+
+
+
+
+-- ----------------------------
+-- customer of system 物流信息表
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_logistics`;
+CREATE TABLE `ts_logistics`
+(
+    `logistics_id`          bigint(20)   NOT NULL AUTO_INCREMENT,
+    `logistics_customer_id` varchar(32)  NOT NULL comment '物流业务id',
+    `order_id`              bigint(20) comment '订单id',
+    `receive_member_name`   varchar(200) comment '收货人名字',
+    `receive_member_mobile` varchar(200) comment '收货人手机',
+    `area`                  bigint(20) comment '区域',
+    `post`                  varchar(200) comment '邮编',
+    `city`                  bigint(20) comment '城市',
+    `detail_address`        varchar(200) comment '详细地址',
+    `delivery_no`           varchar(45) comment '快递单号',
+    `route_id`              bigint(20) comment '线路id',
+    `remark`                varchar(400) comment '备注',
+    `create_time`           datetime     NOT NULL COMMENT '创建时间',
+    `create_by`             varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`           datetime     NOT NULL COMMENT '修改时间',
+    `update_by`             varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`logistics_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='物流信息表';
+
+
+
+-- ----------------------------
+-- customer of system 地址表  包括1，2，3，4级地址
+-- 1.省份/直辖市:江苏省(100)/上海市(020)
+-- 2.地级市(省会等)/区:南京市(025)/上海市(021)
+-- 3.区/县:鼓楼区(05)/徐汇区(03)
+-- 4.乡镇/街道:太阳乡(07)/正阳街道(07)
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_address`;
+CREATE TABLE `ts_address`
+(
+    `address_id`                 bigint(20)   NOT NULL AUTO_INCREMENT,
+    `address_customer_id`        varchar(32)  NOT NULL comment '地址业务id',
+    `receive_address_id`         varchar(200) comment '区域编码',
+    `receive_address_pid`        varchar(45) comment '父级区域编码',
+    `receive_address_level`      varchar(20) comment '级别 1.省;2.市;3.区/县;4.镇',
+    `receive_address_name`       varchar(200) comment '名称',
+    `receive_address_second_pid` varchar(45) comment 'level为4-镇时，有值(对应的市区域编码，此字段可不用)',
+    `receive_address_snid`       varchar(100) comment 'snid+level为唯一标识(此字段可不用)',
+    `status`                     varchar(20) default 'DISABLE' comment '状态 ENABLE:启用;DISABLE:禁用',
+    `create_time`                datetime     NOT NULL COMMENT '创建时间',
+    `create_by`                  varchar(100) NOT NULL COMMENT '创建人',
+    `update_time`                datetime     NOT NULL COMMENT '修改时间',
+    `update_by`                  varchar(100) NOT NULL COMMENT '修改人',
+    PRIMARY KEY (`address_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8
+  ROW_FORMAT = COMPACT COMMENT ='地址表';
