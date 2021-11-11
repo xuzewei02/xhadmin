@@ -848,7 +848,7 @@ CREATE TABLE `ts_member`
     `email`              varchar(200) comment '邮箱',
     `birthday_date`      date COMMENT '出生日期(生日)',
     `user_type`          varchar(45)  DEFAULT NULL comment '用户类型(EU:企业用户;CU:个人用户)',
-    `status`             varchar(20)  NOT NULL COMMENT '状态 ENABLE:有效;DISABLE:无效',
+    `status`             bit(1)  COMMENT '状态 ENABLE:有效;DISABLE:无效',
     `wc_union_id`        varchar(100) COMMENT '微信union_id',
     `al_union_id`        varchar(100) COMMENT '支付宝union_id',
     `create_time`        datetime     NOT NULL COMMENT '创建时间',

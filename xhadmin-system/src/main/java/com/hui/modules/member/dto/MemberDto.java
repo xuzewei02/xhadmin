@@ -47,7 +47,7 @@ public class MemberDto extends BaseDTO implements Serializable {
 
     private String userType;
 
-    private String status;
+    private Boolean status;
 
     private String wcUnionId;
 

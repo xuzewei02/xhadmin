@@ -99,7 +99,7 @@ public class Member extends BaseEntity implements Serializable {
 
     @NotNull
     @ApiModelProperty(value = "状态 ENABLE:有效;DISABLE:无效")
-    private String status;
+    private Boolean status;
 
     @NotNull
     @ApiModelProperty(value = "微信union_id")
