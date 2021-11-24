@@ -35,4 +35,7 @@ public class MemberQueryCriteria {
 
     @Query(type = Query.Type.BETWEEN)
     private List<Timestamp> createTime;
+
+    @Query
+    private String status;
 }
