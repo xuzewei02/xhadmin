@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.hui.modules.member.dto.MemberDto.toMemberManagerResult;
 
 /**
  * @author xu.ze.wei
@@ -37,8 +40,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Map<String, Object> queryAll(MemberQueryCriteria member, Pageable pageable){
         Page<Member> page = memberRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, member, cb), pageable);
-        return PageUtil.toPage(page.map(memberMapper::toDto));
+        //return PageUtil.toPage(page.map(memberMapper::toDto));
+        List<MemberDto> memberDtos = page.getContent().stream().map(toMemberManagerResult()).collect(Collectors.toList());
+        return PageUtil.toPageByList(memberDtos);
     }
+
+
 
     /**
      * 会员信息 --全部
