@@ -57,6 +57,7 @@ public class QueryHelp {
                 }
             }
         }
+        //todo rollback
         try {
             List<Field> fields = getAllFields(query.getClass(), new ArrayList<>());
             for (Field field : fields) {
